@@ -1,0 +1,10 @@
+#!/bin/sh
+set -eu
+SCRIPT=$0
+while [ -L "$SCRIPT" ]; do
+  BASE_DIR=$(CDPATH= cd -- "$(dirname -- "$SCRIPT")" && pwd)
+  LINK=$(readlink "$SCRIPT")
+  case "$LINK" in /*) SCRIPT=$LINK ;; *) SCRIPT=$BASE_DIR/$LINK ;; esac
+done
+DIR=$(CDPATH= cd -- "$(dirname -- "$SCRIPT")" && pwd)
+exec node "$DIR/native-cli.mjs" "$@"
