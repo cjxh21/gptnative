@@ -7,7 +7,7 @@ const cli=join(dirname(fileURLToPath(import.meta.url)),'..','native-cli.mjs')
 const run=args=>spawnSync(process.execPath,[cli,...args],{encoding:'utf8'})
 test('--version prints a version and exits zero',()=>{
  for(const flag of ['--version','-v']){
-  const r=run([flag]);assert.equal(r.status,0);assert.match(r.stdout,/^gptnative \d+\.\d+\.\d+\n$/);assert.equal(r.stderr,'')
+  const r=run([flag]);assert.equal(r.status,0);assert.match(r.stdout,/^acw \d+\.\d+\.\d+\n$/);assert.equal(r.stderr,'')
  }
 })
 test('--version is not dispatched as an unknown command',()=>{
@@ -17,5 +17,5 @@ test('unknown commands are still rejected without touching credentials',()=>{
  const r=run(['definitely-not-a-command']);assert.notEqual(r.status,0);assert.match(r.stderr,/Unknown command/)
 })
 test('bare invocation and --help still print usage',()=>{
- for(const args of [[],['--help']]){const r=run(args);assert.equal(r.status,0);assert.match(r.stdout,/gptnative account/)}
+ for(const args of [[],['--help']]){const r=run(args);assert.equal(r.status,0);assert.match(r.stdout,/acw account/)}
 })

@@ -32,7 +32,7 @@ function makeAuth({ email = 'test@example.com', expInMs = 3600_000, accountId = 
     },
   }
 }
-const isolated = () => mkdtempSync(join(tmpdir(), 'gptnative-cfg-'))
+const isolated = () => mkdtempSync(join(tmpdir(), 'acw-cfg-'))
 
 /* ---------------- config ---------------- */
 

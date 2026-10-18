@@ -1,4 +1,4 @@
-# gptnative
+# acw
 
 固定账号的 ChatGPT 原生 CLI：向**普通临时会话**提问、联网搜索，并把完成的问答归档到本地库。
 
@@ -24,8 +24,9 @@
 需要 Node >= 20、`uv`、`curl-cffi==0.16.3`（首次运行由 uv 自动拉取）。
 
 ```sh
-git clone <repo> && cd gptnative
-ln -s "$PWD/gptnative" ~/.local/bin/gptnative
+git clone git@github.com:cjxh21/agent-chatgpt-web.git
+cd agent-chatgpt-web
+ln -s "$PWD/acw" ~/.local/bin/acw
 ```
 
 ## 首次配置
@@ -34,7 +35,7 @@ ln -s "$PWD/gptnative" ~/.local/bin/gptnative
 （在终端跑一次 `codex login` 就会生成）。
 
 ```sh
-gptnative setup --auth ~/.codex/auth.json --library ~/Documents/ChatGPT/websync
+acw setup --auth ~/.codex/auth.json --library ~/Documents/ChatGPT/websync
 ```
 
 setup 会校验身份（邮箱、邮箱已验证、账号 ID、有效期）后导入，并按需创建配置。
@@ -43,7 +44,7 @@ setup 会校验身份（邮箱、邮箱已验证、账号 ID、有效期）后�
 配置完成后随时自检：
 
 ```sh
-gptnative doctor
+acw doctor
 ```
 
 `configured: true` 表示可以正常使用。
@@ -79,28 +80,28 @@ gptnative doctor
 ```
 
 ```sh
-gptnative setup --auth ~/work-auth.json --library ~/Documents/ChatGPT/work --profile work
-gptnative profiles                       # 列出全部 profile
-gptnative ask --profile work ...         # 临时切换账号与库
+acw setup --auth ~/work-auth.json --library ~/Documents/ChatGPT/work --profile work
+acw profiles                       # 列出全部 profile
+acw ask --profile work ...         # 临时切换账号与库
 ```
 
 ## 使用
 
 ```sh
-gptnative doctor
-gptnative account
-gptnative models
-gptnative ask --temporary --search --prompt-file /path/question.txt --output /path/result.json
-gptnative status --job /path/job.json --content
-gptnative list --limit 20
-gptnative backup
+acw doctor
+acw account
+acw models
+acw ask --temporary --search --prompt-file /path/question.txt --output /path/result.json
+acw status --job /path/job.json --content
+acw list --limit 20
+acw backup
 ```
 
 长任务用后台提交，避免调用方超时：
 
 ```sh
-gptnative ask --temporary --async --search --prompt-file /path/question.txt
-gptnative status --job <library>/native-jobs/<id>.json
+acw ask --temporary --async --search --prompt-file /path/question.txt
+acw status --job <library>/native-jobs/<id>.json
 ```
 
 `queued` 只表示本地已接受；`complete: true` 且 `phase: done` 才代表完整回答与归档成功。

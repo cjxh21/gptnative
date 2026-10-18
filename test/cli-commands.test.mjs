@@ -33,7 +33,7 @@ function run(args, { root }) {
     env: { ...process.env, GPTACCOUNTS_HOME: root },
   })
 }
-const isolated = () => mkdtempSync(join(tmpdir(), 'gptnative-cli-'))
+const isolated = () => mkdtempSync(join(tmpdir(), 'acw-cli-'))
 
 test('doctor exits 2 and reports configured:false before setup', () => {
   const root = isolated()

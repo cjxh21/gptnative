@@ -24,29 +24,29 @@ const CLI_VERSION='1.0.0'
 // --version is documented metadata, not a dispatched command: answer it before
 // the command allowlist so it cannot surface as "Unknown command".
 if(args.includes('--version')||args.includes('-v')){
- console.log(`gptnative ${CLI_VERSION}`);process.exit(0)
+ console.log(`acw ${CLI_VERSION}`);process.exit(0)
 }
 if(!command||args.includes('--help')){
  console.log(`ChatGPT native HTTP CLI; no browser or Codex model turns.
-  gptnative login [--profile NAME] [--library DIR]   # 浏览器验证码登录并导入凭据
-  gptnative setup --auth FILE [--library DIR] [--profile NAME]
-  gptnative doctor
-  gptnative profiles
-  gptnative account
-  gptnative models
-  gptnative list [--archived] [--limit 20]
-  gptnative requirements-probe
-  gptnative device-probe
-  gptnative backup [--root DIR] [--budget N] [--full]
-  gptnative archive --input COMPLETED_RESULT.json [--root DIR]
-  gptnative ask --temporary --prompt-file QUESTION.txt [--model SLUG] [--search]
+  acw login [--profile NAME] [--library DIR]   # 浏览器验证码登录并导入凭据
+  acw setup --auth FILE [--library DIR] [--profile NAME]
+  acw doctor
+  acw profiles
+  acw account
+  acw models
+  acw list [--archived] [--limit 20]
+  acw requirements-probe
+  acw device-probe
+  acw backup [--root DIR] [--budget N] [--full]
+  acw archive --input COMPLETED_RESULT.json [--root DIR]
+  acw ask --temporary --prompt-file QUESTION.txt [--model SLUG] [--search]
   Add --async to return a durable job immediately, independent of caller timeout.
-  gptnative status --job JOB.json [--content]
-  gptnative recover --job JOB.json [--timeout-ms 1200000]
+  acw status --job JOB.json [--content]
+  acw recover --job JOB.json [--timeout-ms 1200000]
   Ask timeout defaults to 20 minutes; --timeout-ms accepts 1000..3600000.
   --output RESULT.json saves a private JSON result.
-  gptnative --version
-Credentials come from ~/.gptaccounts (run "gptnative setup" first; "gptnative doctor" checks it).
+  acw --version
+Credentials come from ~/.gptaccounts (run "acw setup" first; "acw doctor" checks it).
 Backup preserves full raw message trees and existing library entries; no remote writes.
 Ask is experimental; uncertain sends are never retried.`);process.exit(0)
 }
@@ -105,7 +105,7 @@ function authContext(){
  if(!loaded.ok)throw Object.assign(Error('NOT_CONFIGURED'),{code:'NOT_CONFIGURED',detail:loaded.code})
  const name=opt('--profile')??loaded.config.activeProfile
  const settings=profileSettings(loaded.config,name)
- process.env.GPTNATIVE_PROFILE=name
+ process.env.ACW_PROFILE=name
  const credential=readCredentialFor(settings.account)
  if(!credential)throw Object.assign(Error('CREDENTIAL_NOT_FOUND'),{code:'CREDENTIAL_NOT_FOUND',email:settings.account})
  return {email:settings.account,profile:name,settings,credential}
@@ -140,11 +140,11 @@ if(command==='status'){
 }
 if(command==='ask'&&args.includes('--async')){
  if(!args.includes('--temporary'))throw Error('Explicit --temporary is required')
- try{const selected=authContext();process.env.GPTNATIVE_EXPECTED_EMAIL=selected.email}
+ try{const selected=authContext();process.env.ACW_EXPECTED_EMAIL=selected.email}
  catch(error){console.error(JSON.stringify({ok:false,code:error.code??error.message,submitted:false}));process.exit(1)}
  const prompt=readFileSync(opt('--prompt-file'),'utf8')
  if(!prompt.trim()||[...prompt].length>100000)throw Error('Invalid prompt')
- const created=newJob(root,{identity:{email:process.env.GPTNATIVE_EXPECTED_EMAIL??null},question:prompt,model:opt('--model'),timeoutMs})
+ const created=newJob(root,{identity:{email:process.env.ACW_EXPECTED_EMAIL??null},question:prompt,model:opt('--model'),timeoutMs})
  const output=opt('--output')??created.path+'.result.json',logPath=created.path+'.log'
  const queued={...created.job,phase:'queued',resultFile:output};writeJob(created.path,queued)
  const workerArgs=args.filter(a=>a!=='--async');if(!opt('--output'))workerArgs.push('--output',output)
@@ -180,7 +180,7 @@ try {
  const selected=authContext()
  const state=await ensureFreshCredential(selected.email,selected.credential,{root:accountsRoot()})
  if(state.refreshed)console.error(JSON.stringify({phase:'credential-refreshed',email:selected.email}))
- process.env.GPTNATIVE_EXPECTED_EMAIL=selected.email
+ process.env.ACW_EXPECTED_EMAIL=selected.email
 }catch(error){updateJob({phase:'failed',error:{code:error.code??error.message},submitted:false});console.error(JSON.stringify({ok:false,code:error.code??error.message,detail:error.detail,submitted:false,retryAutomatically:false}));process.exit(1)}
 const child=spawn('uv',['run','--no-project','--with','curl-cffi==0.16.3','python',join(here,'native-http.py')],
  {cwd:here,env:{...process.env,UV_CACHE_DIR:'/tmp/gptweb-native-uv-cache'},stdio:['pipe','pipe','pipe'],detached:true})
@@ -214,7 +214,7 @@ try{
  timer=setTimeout(()=>{updateJob({phase:'timeout',submitted:sendAttempted?'unknown':false,retryAutomatically:false});console.error(JSON.stringify({ok:false,code:'CLI_TIMEOUT',job:jobPath,submitted:sendAttempted?'unknown':false,retryAutomatically:false}));lease?.release();stopChild();process.exit(1)},command==='backup'?45*60000:['ask','recover'].includes(command)?timeoutMs+120000:210000)
  const identity=await ready
  // 身份必须与配置期望一致且经远端核验，不回退其他账号
- const expected=process.env.GPTNATIVE_EXPECTED_EMAIL
+ const expected=process.env.ACW_EXPECTED_EMAIL
  if(!expected||identity.email!==expected||identity.remoteVerified!==true)throw Error('Pinned identity not verified')
  let result={ok:true,identity}
  if(command==='models')result.catalog=await get('/models')

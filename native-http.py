@@ -39,16 +39,16 @@ def load_config():
 def load_email():
     """确定本次使用的账号。
 
-    优先级：环境变量 GPTNATIVE_ACCOUNT > 配置 activeProfile.account。
+    优先级：环境变量 ACW_ACCOUNT > 配置 activeProfile.account。
     没有显式配置时退化为库内单账号；多账号则要求明确指定，不做猜测。
     """
-    forced = os.environ.get("GPTNATIVE_ACCOUNT")
+    forced = os.environ.get("ACW_ACCOUNT")
     if forced:
         return forced.strip().lower()
     config = load_config()
     if not config:
         raise TransportError("NOT_CONFIGURED")
-    profile_name = os.environ.get("GPTNATIVE_PROFILE") or config.get("activeProfile")
+    profile_name = os.environ.get("ACW_PROFILE") or config.get("activeProfile")
     profile = (config.get("profiles") or {}).get(profile_name)
     if not profile or not profile.get("account"):
         raise TransportError("PROFILE_ACCOUNT_MISSING", profile=profile_name)

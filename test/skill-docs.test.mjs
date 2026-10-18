@@ -10,7 +10,7 @@ const read = (f) => readFileSync(join(here, f), 'utf8')
 
 test('skill gates on doctor and does not require reading CONFIG.md when configured', () => {
   const skill = read('skills/gptweb/SKILL.md')
-  assert.match(skill, /gptnative doctor/, 'skill must start with doctor self-check')
+  assert.match(skill, /acw doctor/, 'skill must start with doctor self-check')
   assert.match(skill, /configured/, 'skill must branch on configured flag')
   assert.match(skill, /CONFIG\.md/, 'skill must point to CONFIG.md when unconfigured')
   // 已配置分支不应要求读 CONFIG.md
@@ -33,7 +33,7 @@ test('skill states macOS-only platform boundary', () => {
 
 test('CONFIG.md documents setup, library change and multi-profile flows', () => {
   const doc = read('skills/gptweb/CONFIG.md')
-  assert.match(doc, /gptnative setup --auth/)
+  assert.match(doc, /acw setup --auth/)
   assert.match(doc, /--library/, 'must document storage location change')
   assert.match(doc, /--profile/, 'must document multi-account flow')
   assert.match(doc, /codex login/, 'must explain where auth.json comes from')

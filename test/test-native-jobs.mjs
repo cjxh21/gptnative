@@ -14,7 +14,7 @@ test('long timeout defaults to 20 minutes and has explicit bounds',()=>{
  assert.throws(()=>askTimeout(0));assert.throws(()=>askTimeout(3600001))
 })
 test('job checkpoint atomically retains prompt, partial answer and conversation id privately',()=>{
- const root=mkdtempSync(join(tmpdir(),'gptnative-job-'))
+ const root=mkdtempSync(join(tmpdir(),'acw-job-'))
  try{const {path,job:j}=newJob(root,{identity,question:'q',model:'gpt-6',timeoutMs:1200000});writeJob(path,{...j,phase:'streaming',conversationId:job.conversationId,partialAnswer:'partial'})
   assert.equal(JSON.parse(readFileSync(path)).partialAnswer,'partial');assert.equal(statSync(path).mode&0o777,0o600)
  }finally{rmSync(root,{recursive:true,force:true})}

@@ -31,7 +31,7 @@ function makeAuth({ email = 'test@example.com', expInMs = 3600_000, accountId = 
     },
   }
 }
-const isolated = () => mkdtempSync(join(tmpdir(), 'gptnative-setup-'))
+const isolated = () => mkdtempSync(join(tmpdir(), 'acw-setup-'))
 
 test('doctor reports not-configured on an empty store', () => {
   const root = isolated()

@@ -1,10 +1,10 @@
 {
-  "name": "gptnative",
+  "name": "acw",
   "version": "0.1.0",
   "private": true,
   "type": "module",
   "description": "Pinned-account ChatGPT native CLI (macOS)",
-  "bin": { "gptnative": "./gptnative" },
+  "bin": { "acw": "./acw" },
   "scripts": {
     "test": "node --test test/",
     "version": "node native-cli.mjs --version"

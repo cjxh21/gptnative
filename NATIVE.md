@@ -1,4 +1,4 @@
-# gptnative 原生调用说明
+# acw 原生调用说明
 
 这份文档讲实现细节与边界；上手用法看 [README.md](README.md)，agent 调用规则看 [SKILL.md](skills/gptweb/SKILL.md)。
 
@@ -6,7 +6,7 @@
 
 凭据来自 **`~/.gptaccounts/`** 共享库，不依赖任何特定项目的内部结构。解析顺序：
 
-1. `GPTNATIVE_ACCOUNT` 环境变量（显式指定邮箱）
+1. `ACW_ACCOUNT` 环境变量（显式指定邮箱）
 2. 配置里 `activeProfile` 指向的 `account`
 3. 都没有则报 `NOT_CONFIGURED`（不做猜测）
 
@@ -49,7 +49,7 @@ CLI 与 Python 传输层各自独立校验，规则相同：
 
 ## 登录
 
-`gptnative login` 封装 `codex login --device-auth`：
+`acw login` 封装 `codex login --device-auth`：
 
 - 用临时 `CODEX_HOME` 隔离写入，不碰用户已有的 `~/.codex` 登录
 - 解析输出里的一次性验证码与链接转发给用户

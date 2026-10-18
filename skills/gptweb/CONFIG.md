@@ -1,13 +1,13 @@
 # GPTWeb 首次配置
 
-只有当 `gptnative doctor` 返回 `"configured": false`，或用户要换账号/换存储位置/加新账号库时，才需要读这份文档。
+只有当 `acw doctor` 返回 `"configured": false`，或用户要换账号/换存储位置/加新账号库时，才需要读这份文档。
 
 ## 一、准备 auth.json
 
 **推荐用一条命令完成登录，跳过手动找文件**：
 
 ```sh
-gptnative login
+acw login
 ```
 
 它会打印登录链接与一次性验证码，浏览器输入后凭据自动导入，无需手工复制 auth.json。
@@ -36,7 +36,7 @@ codex login
 ## 二、首次配置
 
 ```sh
-gptnative setup --auth ~/.codex/auth.json --library ~/Documents/ChatGPT/websync
+acw setup --auth ~/.codex/auth.json --library ~/Documents/ChatGPT/websync
 ```
 
 参数说明：
@@ -53,7 +53,7 @@ setup 会校验邮箱、邮箱已验证、账号 ID、有效期；不通过会�
 完成后确认：
 
 ```sh
-gptnative doctor
+acw doctor
 ```
 
 看到 `"configured": true` 即完成。
@@ -63,7 +63,7 @@ gptnative doctor
 改当前 profile 的库：
 
 ```sh
-gptnative setup --auth ~/.codex/auth.json --library /新的/库路径 --force
+acw setup --auth ~/.codex/auth.json --library /新的/库路径 --force
 ```
 
 注意：`--force` 只替换该 profile 的配置，不删除旧库里的文件。
@@ -73,19 +73,19 @@ gptnative setup --auth ~/.codex/auth.json --library /新的/库路径 --force
 每个账号+库的组合是一个 profile：
 
 ```sh
-gptnative setup --auth ~/work-auth.json --library ~/Documents/ChatGPT/work --profile work
+acw setup --auth ~/work-auth.json --library ~/Documents/ChatGPT/work --profile work
 ```
 
 查看全部 profile：
 
 ```sh
-gptnative profiles
+acw profiles
 ```
 
 临时用某个 profile（不改默认）：
 
 ```sh
-gptnative ask --profile work --temporary --async --prompt-file /path/q.txt
+acw ask --profile work --temporary --async --prompt-file /path/q.txt
 ```
 
 长期切换默认，编辑 `~/.gptaccounts/config.json` 的 `activeProfile` 字段即可。
@@ -95,7 +95,7 @@ gptnative ask --profile work --temporary --async --prompt-file /path/q.txt
 如果用户换了 ChatGPT 账号登录，重新跑一次 setup，指向新的 auth.json：
 
 ```sh
-gptnative setup --auth /path/to/new-auth.json --library ~/Documents/ChatGPT/websync --force
+acw setup --auth /path/to/new-auth.json --library ~/Documents/ChatGPT/websync --force
 ```
 
 不同邮箱的凭据会并存于 `~/.gptaccounts/credentials/`，不会互相覆盖。
