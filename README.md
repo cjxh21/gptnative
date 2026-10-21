@@ -106,6 +106,24 @@ acw status --job <library>/native-jobs/<id>.json
 
 `queued` 只表示本地已接受；`complete: true` 且 `phase: done` 才代表完整回答与归档成功。
 
+## 共享方
+
+`~/.gptaccounts` 现在是本机 **ChatGPT 原生登录态的唯一来源**，以下三处都从它读取，
+不再各自保存副本：
+
+| 使用方 | 读取方式 |
+|---|---|
+| `acw` / `gptweb` skill | 默认 profile 账号；临近过期自动刷新并写回本库 |
+| `codex-imagegen` skill | 一次性 `CODEX_HOME` + `auth.json` 软链到本库文件 |
+| DSH `dsh-codex-workbench` | 账号邮箱登记于本库时直接读取；额度查询同样优先读本库 |
+
+给 Codex 类工具的说明：本库凭据是官方 Codex client 签发的授权（`scp` 为 openid/profile/email/offline_access），
+**不能**当作注入的 bearer token 喂给自定义 provider —— 那条路在 `turn/start` 会返回
+`401 Missing scopes: api.responses.write`。正确用法是像官方登录一样，让 codex 自己读一个
+指向本库文件的 `auth.json`；此时刷新会自动写回本库。
+
+反向约束仍然成立：`acw` 只写 `~/.gptaccounts`，**绝不**修改 `~/.codex` 或 CC Switch。
+
 ## Token 刷新
 
 access_token 临近过期（5 分钟内）时自动用 refresh_token 换取新 token，
